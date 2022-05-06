@@ -1,0 +1,73 @@
+dist:
+  module: github.com/GoogleCloudPlatform/opentelemetry-operations-go/gmp
+  name: googlemanagedprometheus
+  description: Google Managed Service for Prometheus collector distribution
+  version: 0.49.0
+  output_path: ./_build
+  otelcol_version: 0.49.0
+
+extensions:
+  - import: go.opentelemetry.io/collector/extension/zpagesextension
+    gomod: go.opentelemetry.io/collector v0.49.0
+  - import: go.opentelemetry.io/collector/extension/ballastextension
+    gomod: go.opentelemetry.io/collector v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/asapauthextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/basicauthextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/bearertokenauthextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/fluentbitextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/healthcheckextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/httpforwarder v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/oauth2clientauthextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/hostobserver v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/observer/k8sobserver v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/oidcauthextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/pprofextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/sigv4authextension v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage v0.49.0
+    import: github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage
+
+exporters:
+  # Add Google Managed Service for Prometheus exporter
+  - gomod: "github.com/GoogleCloudPlatform/opentelemetry-operations-go/exporter/collector/googlemanagedprometheus v0.30.1"
+  - import: go.opentelemetry.io/collector/exporter/loggingexporter
+    gomod: go.opentelemetry.io/collector v0.49.0
+  - import: go.opentelemetry.io/collector/exporter/otlpexporter
+    gomod: go.opentelemetry.io/collector v0.49.0
+  - import: go.opentelemetry.io/collector/exporter/otlphttpexporter
+    gomod: go.opentelemetry.io/collector v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/fileexporter v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/googlecloudexporter v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusexporter v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/exporter/prometheusremotewriteexporter v0.49.0
+
+processors:
+  - import: go.opentelemetry.io/collector/processor/batchprocessor
+    gomod: go.opentelemetry.io/collector v0.49.0
+  - import: go.opentelemetry.io/collector/processor/memorylimiterprocessor
+    gomod: go.opentelemetry.io/collector v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/attributesprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/cumulativetodeltaprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/deltatorateprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/filterprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbyattrsprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/groupbytraceprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/k8sattributesprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricsgenerationprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/metricstransformprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/probabilisticsamplerprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourcedetectionprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/routingprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/spanmetricsprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/spanprocessor v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/processor/tailsamplingprocessor v0.49.0
+
+receivers:
+  - import: go.opentelemetry.io/collector/receiver/otlpreceiver
+    gomod: go.opentelemetry.io/collector v0.49.0
+  - gomod: github.com/open-telemetry/opentelemetry-collector-contrib/receiver/prometheusreceiver v0.49.0
+
+# When adding a replace, add a comment before it to document why it's needed and when it can be removed
+replaces:
+  # See https://github.com/google/gnostic/issues/262
+  - github.com/googleapis/gnostic v0.5.6 => github.com/googleapis/gnostic v0.5.5

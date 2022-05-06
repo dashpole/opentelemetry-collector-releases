@@ -1,0 +1,49 @@
+receivers:
+    prometheus:
+        config:
+            scrape_configs:
+            # Add your prometheus scrape configuration here.
+            # Using kubernetes_sd_configs with namespaced resources
+            # ensures the namespace is set on your metrics.
+            - job_name: 'kubernetes-pods'
+              kubernetes_sd_configs:
+              - role: pod
+              relabel_configs:
+              - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+                action: keep
+                regex: true
+              - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+                action: replace
+                target_label: __metrics_path__
+                regex: (.+)
+              - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+                action: replace
+                regex: (.+):(?:\d+);(\d+)
+                replacement: $$1:$$2
+                target_label: __address__
+              - action: labelmap
+                regex: __meta_kubernetes_pod_label_(.+)
+processors:
+    batch:
+        # batch metrics before sending to reduce API usage
+        send_batch_max_size: 200
+        send_batch_size: 200
+        timeout: 5s
+    memory_limiter:
+        # drop metrics if memory usage gets too high
+        check_interval: 1s
+        limit_percentage: 65
+        spike_limit_percentage: 20
+    resourcedetection:
+        # detect cluster name and location
+        detectors: [gce, gke]
+        timeout: 10s
+exporters:
+    googlemanagedprometheus:
+
+service:
+    pipelines:
+        metrics:
+            receivers: [prometheus]
+            processors: [batch, memory_limiter, resourcedetection]
+            exporters: [googlemanagedprometheus]
